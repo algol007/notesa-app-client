@@ -1,22 +1,22 @@
 <template>
   <div class="login">
     <div class="forms lg:w-1/2 xl:w-1/3">
-      <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <form @submit="login" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="Email">
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="text" placeholder="Email" v-model="user.email">
         </div>
         <div class="mb-6">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
             Kata Sandi
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Kata Sandi">
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Kata Sandi" v-model="user.password">
           <!-- <p class="text-red-500 text-xs italic">Please choose a password.</p> -->
         </div>
         <div class="flex items-center justify-between">
-          <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">
+          <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
             Masuk
           </button>
           <router-link class="forgot inline-block align-baseline font-bold text-sm hover:text-gray-700" to="/auth/register">
@@ -32,8 +32,46 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'Login'
+  name: 'Login',
+  data () {
+    return {
+      id: null,
+      user: {
+        email: null,
+        password: null
+      }
+    }
+  },
+  methods: {
+    localData () {
+      const parsed = JSON.stringify({
+        id: this.id
+      })
+      localStorage.setItem('items', parsed)
+    },
+    login (e) {
+      e.preventDefault()
+      axios
+        .post(process.env.VUE_APP_BASE_URL + 'auth/signin', {
+          email: this.user.email,
+          password: this.user.password
+        })
+        .then(res => {
+          if (res.data.status !== 0) {
+            console.log(res.data.user)
+            this.id = res.data.user
+            this.localData()
+            this.$router.push('/')
+            localStorage.setItem({ id: res.data.user })
+          } else {
+            alert('wrong password')
+          }
+        })
+    }
+  }
 }
 </script>
 

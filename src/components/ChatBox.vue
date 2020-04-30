@@ -8,7 +8,6 @@
 <script>
 import receiver from '@/components/Receiver.vue'
 import sender from '@/components/Sender.vue'
-import db from '../firebaseInit'
 
 export default {
   name: 'ChatBox',
@@ -26,20 +25,6 @@ export default {
   },
   methods: {
     dataUser () {
-      db.collection('user').get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          console.log(doc.id)
-          const data = {
-            id: doc.id,
-            user_id: doc.data().user_id,
-            name: doc.data().name,
-            email: doc.data().email,
-            password: doc.data().password,
-            image: doc.data().image
-          }
-          this.users.push(data)
-        })
-      })
     }
   }
 }

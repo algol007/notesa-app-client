@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import sidebar from '@/components/Sidebar.vue'
 import navbar from '@/components/Navbar.vue'
 import chatBox from '@/components/ChatBox.vue'
@@ -24,6 +25,24 @@ export default {
     navbar,
     'chat-box': chatBox,
     'send-box': sendBox
+  },
+  data () {
+    return {
+      storage: []
+    }
+  },
+  created () {
+    this.storage = JSON.parse(localStorage.getItem('items'))
+  },
+  methods: {
+    ...mapActions('user', ['getUserById'])
+  },
+  computed: {
+    ...mapState('user', ['user'])
+  },
+  mounted () {
+    this.getUserById(this.storage.id)
+    console.log(this.storage.id)
   }
 }
 </script>
