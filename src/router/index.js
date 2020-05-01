@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
+import Logout from '../views/Logout.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,7 @@ const routes = [
     component: Home
   },
   {
-    path: '/profile/:user_id',
+    path: '/profile/:userId',
     name: 'Profile',
     component: Profile
   },
@@ -27,6 +28,11 @@ const routes = [
     path: '/auth/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/logout',
+    name: 'Logout',
+    component: Logout
   }
 ]
 

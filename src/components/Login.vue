@@ -2,6 +2,12 @@
   <div class="login">
     <div class="forms lg:w-1/2 xl:w-1/3">
       <form @submit="login" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="alert bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-3" role="alert" v-if="error.length !=0">
+          <strong class="font-bold">{{ error[0] }}</strong>
+          <span class="close absolute top-0 bottom-0 right-0 px-4 py-2" @click="close">
+            <i class="fas fa-times"></i>
+          </span>
+        </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
@@ -13,7 +19,6 @@
             Kata Sandi
           </label>
           <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="Kata Sandi" v-model="user.password">
-          <!-- <p class="text-red-500 text-xs italic">Please choose a password.</p> -->
         </div>
         <div class="flex items-center justify-between">
           <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
@@ -39,10 +44,17 @@ export default {
   data () {
     return {
       id: null,
+      error: [],
       user: {
         email: null,
         password: null
       }
+    }
+  },
+  beforeCreate () {
+    const isLogin = localStorage.getItem('items')
+    if (isLogin) {
+      this.$router.push('/')
     }
   },
   methods: {
@@ -52,6 +64,11 @@ export default {
       })
       localStorage.setItem('items', parsed)
     },
+    close () {
+      const close = document.querySelector('.alert')
+      close.classList.toggle('hide')
+      console.log('close')
+    },
     login (e) {
       e.preventDefault()
       axios
@@ -60,14 +77,22 @@ export default {
           password: this.user.password
         })
         .then(res => {
-          if (res.data.status !== 0) {
-            console.log(res.data.user)
-            this.id = res.data.user
-            this.localData()
-            this.$router.push('/')
-            localStorage.setItem({ id: res.data.user })
+          this.error = []
+          // console.log(res.data.id)
+          if (res.data.id === 0) {
+            this.error.push('Email anda belum terdaftar!')
           } else {
-            alert('wrong password')
+            this.error = []
+            // console.log(res.data.status)
+            if (res.data.status === 0) {
+              this.error.push('Wrong password!')
+            } else {
+              // console.log(res.data.user)
+              this.id = res.data.user
+              this.localData()
+              this.$router.push('/')
+              localStorage.setItem({ id: res.data.user })
+            }
           }
         })
     }
@@ -90,5 +115,8 @@ export default {
     color: #3B6978;
     padding-left: 10px;
     text-align: right;
+  }
+  .close{
+    cursor: pointer;
   }
 </style>

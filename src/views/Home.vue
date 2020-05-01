@@ -1,5 +1,5 @@
 <template>
-  <div class="home flex bg-gray-300">
+  <div class="home flex">
     <sidebar class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4" />
     <div class="main w-full">
       <navbar />
@@ -31,18 +31,21 @@ export default {
       storage: []
     }
   },
+  beforeCreate () {
+    const isLogin = localStorage.getItem('items')
+    if (!isLogin) {
+      this.$router.push('/auth/login')
+    }
+  },
   created () {
     this.storage = JSON.parse(localStorage.getItem('items'))
+    this.getUserById(this.storage.id)
   },
   methods: {
     ...mapActions('user', ['getUserById'])
   },
   computed: {
     ...mapState('user', ['user'])
-  },
-  mounted () {
-    this.getUserById(this.storage.id)
-    console.log(this.storage.id)
   }
 }
 </script>
@@ -51,6 +54,7 @@ export default {
   .home{
     height: 100vh;
     display: flex;
+    background-color: #CAE8D5;
   }
   .navbar{
     // position: fixed;

@@ -8,18 +8,18 @@
           </router-link>
         </div>
         <div class="profile-img mb-5">
-          <img src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg" alt="profile-img" class="mx-auto rounded-full">
+          <img :src="profile.image" :alt="profile.image" class="mx-auto rounded-full">
         </div>
         <form @submit="saveChanges" class="profile-info">
           <div class="profile-name mb-3 text-xl">
-            <input type="text" :value="name" class="text-center outline-none" id="name" required>
+            <input type="text" v-model="profile.name" class="text-center outline-none" id="name" required>
           </div>
           <div class="profile-email pb-5 text-md text-gray-600">
-            <input type="text" :value="this.email" class="text-center outline-none" id="email" readonly>
+            <input type="text" :value="profile.email" class="text-center outline-none" id="email" readonly>
           </div>
           <div class="button-save flex flex-row-reverse mt-5">
             <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Save</button>
-            <a href="#name" class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" type="button">Edit</a>
+            <!-- <a href="#name" class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" type="button">Edit</a> -->
           </div>
         </form>
       </div>
@@ -31,67 +31,38 @@
 </template>
 
 <script>
-import db from '../firebaseInit'
+import axios from 'axios'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'Profile',
   data () {
     return {
-      user_id: null,
-      name: null,
-      email: null
+      profile: []
     }
   },
-  watch: {
-    '$route': 'getUser' //eslint-disable-line
-  },
-  beforeRouterEnter (to, from, next) {
-    db.collection('user').where('user_id', '==', to.params.user_id).get()
-      .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          next(vm => {
-            vm.user_id = doc.data().user_id
-            vm.name = doc.data().name
-            vm.email = doc.data().email
-          })
-        })
-      })
+  created () {
+    this.getUserProfile(this.$route.params.userId)
   },
   mounted () {
-    this.getUser()
+    this.getProfile()
   },
   methods: {
-    saveChanges (e) {
-      e.preventDefault()
-      console.log('Berhasil')
-    },
-    getUser () {
-      console.log(this.$route.params.user_id)
-      db.collection('user').where('user_id', '==', this.$route.params.user_id)
-        .then(querySnapshot => {
-          querySnapshot.forEach(doc => {
-            this.user_id = doc.data().user_id
-            this.name = doc.data().name
-            console.log(this.name)
-            this.email = doc.data().email
-          })
+    getProfile () {
+      axios
+        .get(process.env.VUE_APP_BASE_URL + 'user/' + this.$route.params.userId)
+        .then(res => {
+          // console.log(res.data.user)
+          this.profile = res.data.user
         })
-      // db.collection('user').where('user_id', '==', this.$route.params.user_id)
-      //   .then(querySnapshot => {
-      //     querySnapshot.forEach(doc => {
-      //       console.log(doc.id)
-      //       const data = {
-      //         id: doc.id,
-      //         user_id: doc.data().user_id,
-      //         name: doc.data().name,
-      //         email: doc.data().email,
-      //         password: doc.data().password,
-      //         image: doc.data().image
-      //       }
-      //       this.users.push(data)
-      //     })
-      //   })
-    }
+    },
+    saveChanges () {
+      console.log('save')
+    },
+    ...mapActions('user', ['getUserProfile'])
+  },
+  computed: {
+    ...mapState('user', ['userProfile'])
   }
 }
 </script>

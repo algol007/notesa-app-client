@@ -1,11 +1,12 @@
 <template>
   <div class="chat-box">
-    <receiver v-for="user in users" :key="user.id" :receiver="user.name" />
-    <sender v-for="user in users" :key="user.id" :sender="user.email" />
+    <receiver receiver="Haloo" />
+    <sender v-for="chat in userChat" :key="chat.id" :sender="chat.message" />
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import receiver from '@/components/Receiver.vue'
 import sender from '@/components/Sender.vue'
 
@@ -15,17 +16,17 @@ export default {
     receiver,
     sender
   },
-  data () {
-    return {
-      users: []
-    }
-  },
-  created () {
-    this.dataUser()
-  },
   methods: {
-    dataUser () {
-    }
+    ...mapActions('chat', ['getAllUserChats'])
+  },
+  computed: {
+    ...mapState('chat', ['userChat']),
+    ...mapState('user', ['user'])
+  },
+  mounted () {
+    const items = JSON.parse(localStorage.getItem('items'))
+    // console.log(items.id)
+    this.getAllUserChats(items.id)
   }
 }
 </script>

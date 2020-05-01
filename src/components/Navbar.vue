@@ -1,13 +1,13 @@
 <template>
   <div class="navbar">
     <div class="title px-5 text-white flex justify-between">
-      <router-link to="/profile">
+      <router-link :to="`/profile/${this.user.id}`" >
         <div class="profile-info flex">
             <div class="profile-img">
               <img src="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg" alt="profile-img" class="h-10 rounded-full">
             </div>
             <div class="profile-name pl-3 py-2">
-              Ady Rahmansyah
+              {{ this.user.name }}
             </div>
         </div>
       </router-link>
@@ -22,13 +22,23 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'Navbar',
   methods: {
     search () {
       const input = document.querySelector('.input')
       input.classList.toggle('active')
-    }
+    },
+    ...mapActions('user', ['getUserProfile'])
+  },
+  computed: {
+    ...mapState('user', ['userProfile']),
+    ...mapState('user', ['user'])
+  },
+  mounted () {
+    this.getUserProfile(this.$route.params.userId)
   }
 }
 </script>
