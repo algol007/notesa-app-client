@@ -1,14 +1,14 @@
 <template>
   <div class="chat-box">
-    <receiver v-for="user in users" :key="user.id" :receiver="user.name" />
-    <sender v-for="user in users" :key="user.id" :sender="user.email" />
+    <receiver receiver="Haloo" />
+    <sender v-for="chat in userChat" :key="chat.id" :sender="chat.message" />
   </div>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
 import receiver from '@/components/Receiver.vue'
 import sender from '@/components/Sender.vue'
-import db from '../firebaseInit'
 
 export default {
   name: 'ChatBox',
@@ -16,31 +16,17 @@ export default {
     receiver,
     sender
   },
-  data () {
-    return {
-      users: []
-    }
-  },
-  created () {
-    this.dataUser()
-  },
   methods: {
-    dataUser () {
-      db.collection('user').get().then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          console.log(doc.id)
-          const data = {
-            id: doc.id,
-            user_id: doc.data().user_id,
-            name: doc.data().name,
-            email: doc.data().email,
-            password: doc.data().password,
-            image: doc.data().image
-          }
-          this.users.push(data)
-        })
-      })
-    }
+    ...mapActions('chat', ['getAllUserChats'])
+  },
+  computed: {
+    ...mapState('chat', ['userChat']),
+    ...mapState('user', ['user'])
+  },
+  mounted () {
+    const items = JSON.parse(localStorage.getItem('items'))
+    // console.log(items.id)
+    this.getAllUserChats(items.id)
   }
 }
 </script>

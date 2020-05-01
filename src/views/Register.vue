@@ -17,6 +17,12 @@ export default {
   name: 'Register',
   components: {
     register
+  },
+  beforeCreate () {
+    const isLogin = localStorage.getItem('items')
+    if (isLogin) {
+      this.$router.push('/')
+    }
   }
 }
 </script>
