@@ -1,27 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+// import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default ({
   namespaced: true,
   state: {
-    userChat: []
+    userC: []
   },
   mutations: {
     userChat (state, data) {
-      state.userChat = data
-      // console.log(data)
+      state.userC = data
+      // console.log(state.userC)
     }
   },
   actions: {
-    getAllUserChats (context, id) {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + `chat/user/${id}`)
-        .then(res => {
-          context.commit('userChat', res.data.chat.rows)
-        })
+    userChat (context, data) {
+      context.commit('userChat', data)
     }
   }
 })

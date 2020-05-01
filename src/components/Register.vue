@@ -2,6 +2,12 @@
   <div class="register">
     <div class="forms lg:w-1/2 xl:w-1/3">
       <form @submit="register" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="alert bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded relative mb-3" role="alert" v-if="error.length !=0">
+          <strong class="font-bold">{{ error[0] }}</strong>
+          <span class="close absolute top-0 bottom-0 right-0 px-4 py-2" @click="close">
+            <i class="fas fa-times"></i>
+          </span>
+        </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
             Nama Lengkap
@@ -57,10 +63,16 @@ export default {
         email: null,
         password: '',
         password2: ''
-      }
+      },
+      error: []
     }
   },
   methods: {
+    close () {
+      const alert = document.querySelector('.alert')
+      alert.classList.toggle('hide')
+      this.error = []
+    },
     register (e) {
       e.preventDefault()
       axios
@@ -70,8 +82,12 @@ export default {
           password: this.user.password
         })
         .then(res => {
-          console.log(res)
-          this.$router.push('/auth/login')
+          if (res.data.status === 0) {
+            this.error.push('Email has been registered!')
+          } else {
+            console.log(res)
+            this.$router.push('/auth/login')
+          }
         })
     }
   }

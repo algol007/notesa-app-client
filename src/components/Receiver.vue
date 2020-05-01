@@ -1,7 +1,7 @@
 <template>
   <div class="receiver w-full mb-2 flex">
     <div class="chating bg-white py-2 px-3 rounded">
-      {{ receiver }}
+      {{ message }}
     </div>
   </div>
 </template>
@@ -10,7 +10,7 @@
 export default {
   name: 'Receiver',
   props: [
-    'receiver'
+    'message'
   ]
 }
 </script>

@@ -14,7 +14,21 @@
     </div>
     <search-box class="search"></search-box>
     <div class="chat-list">
-      <chat v-for="(user, index) in users" :key="index" :name="user.name" message="Message" :image="user.image" />
+      <!-- Chat -->
+      <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="(user, index) in users" :key="index"  @click="$emit('selected', user)">
+        <div class="profile-img">
+          <img :src="user.image" :alt="user.image" class="h-12 rounded-full">
+        </div>
+        <div class="profile-info text-gray-900 pl-3">
+          <div class="profile-name">
+            {{ user.name }}
+          </div>
+          <div class="profile-msg text-gray-700">
+            Message
+          </div>
+        </div>
+      </div>
+      <!-- Chat -->
     </div>
   </div>
 </template>
@@ -23,22 +37,32 @@
 import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 import searchBox from '@/components/SearchBox.vue'
-import chat from '@/components/Chat.vue'
+// import chat from '@/components/Chat.vue'
 
 export default {
   name: 'Sidebar',
   components: {
-    'search-box': searchBox,
-    chat
+    'search-box': searchBox
+    // chat
   },
   data () {
     return {
       users: [],
-      foo: []
+      foo: [],
+      data: null
     }
   },
   methods: {
-    ...mapActions('user', ['getAllUsers']),
+    ...mapActions('chat', ['userChat']),
+    selected (data) {
+      this.data = data
+      // console.log(data)
+    },
+    activeChat (id) {
+      const chat = document.querySelector('.chat')
+      // console.log(chat.key)
+      chat.classList.toggle('active')
+    },
     getUsers () {
       axios
         .get(process.env.VUE_APP_BASE_URL + 'user')
@@ -54,20 +78,13 @@ export default {
             }
           }
         })
-    },
-    activeChat (id) {
-      const chat = document.querySelector('.chat')
-      // console.log(chat.key)
-      chat.classList.toggle('active')
     }
   },
-  computed: {
-    ...mapState('user', ['allUsers']),
-    ...mapState('user', ['user'])
-  },
   mounted () {
-    // this.getAllUsers()
     this.getUsers()
+  },
+  computed: {
+    ...mapState('user', ['user'])
   }
 }
 </script>
@@ -111,5 +128,20 @@ export default {
   }
   .active{
     background-color: #84A9AC;
+  }
+  .chat{
+    border-bottom: 2px solid #84A9AC;
+    overflow: hidden;
+    height: 70px;
+    cursor: pointer;
+  }
+  .profile-msg{
+    font-size: 14px;
+    overflow: hidden;
+    height: 20px;
+  }
+  .profile-name{
+    height: 25px;
+    overflow: hidden;
   }
 </style>
