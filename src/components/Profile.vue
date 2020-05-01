@@ -19,7 +19,8 @@
           </div>
           <div class="button-save flex flex-row-reverse mt-5">
             <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Save</button>
-            <!-- <a href="#name" class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" type="button">Edit</a> -->
+            <!-- <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" onclick="document.getElementById('getFile').click()">Upload Image</button> -->
+            <input class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mr-2" type="file" ref="file" @change="upload">
           </div>
         </form>
       </div>
@@ -38,7 +39,8 @@ export default {
   name: 'Profile',
   data () {
     return {
-      profile: []
+      profile: [],
+      image: null
     }
   },
   created () {
@@ -48,6 +50,11 @@ export default {
     this.getProfile()
   },
   methods: {
+    upload () {
+      const file = this.$refs.file.files[0]
+      this.image = file
+      console.log(this.$refs.file.value)
+    },
     getProfile () {
       axios
         .get(process.env.VUE_APP_BASE_URL + 'user/' + this.$route.params.userId)
@@ -56,8 +63,21 @@ export default {
           this.profile = res.data.user
         })
     },
-    saveChanges () {
-      console.log('save')
+    saveChanges (e) {
+      e.preventDefault()
+      console.log('Hello')
+      const formData = new FormData()
+      formData.append('name', this.profile.name)
+      formData.append('email', this.profile.email)
+      formData.append('password', this.profile.password)
+      formData.append('image', this.image)
+      axios
+        .put(process.env.VUE_APP_BASE_URL + 'user/' + this.$route.params.userId, formData)
+        .then(res => {
+          console.log(res)
+          this.$refs.file.value = ''
+          this.getProfile()
+        })
     },
     ...mapActions('user', ['getUserProfile'])
   },

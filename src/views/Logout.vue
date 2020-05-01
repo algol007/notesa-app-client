@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'Logout',
-  beforeCreate () {
+  created () {
     localStorage.removeItem('items')
     this.$router.push('auth/login')
   }

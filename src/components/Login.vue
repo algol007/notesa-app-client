@@ -68,6 +68,7 @@ export default {
       const close = document.querySelector('.alert')
       close.classList.toggle('hide')
       console.log('close')
+      this.error = []
     },
     login (e) {
       e.preventDefault()
@@ -91,7 +92,7 @@ export default {
               this.id = res.data.user
               this.localData()
               this.$router.push('/')
-              localStorage.setItem({ id: res.data.user })
+              // localStorage.setItem({ id: res.data.user })
             }
           }
         })
