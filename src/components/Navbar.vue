@@ -4,7 +4,7 @@
       <router-link :to="`/profile/${this.userC.id}`" >
         <div class="profile-info flex">
             <div class="profile-img">
-              <img :src="this.userC.image" :alt="this.userC.image" class="h-10 rounded-full">
+              <img :src="this.userC.image" :alt="this.userC.image" width="40px" class="h-10 rounded-full">
             </div>
             <div class="profile-name pl-3 py-2">
               {{ this.userC.name }}

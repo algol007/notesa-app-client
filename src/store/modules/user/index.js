@@ -29,19 +29,20 @@ export default ({
         }
         // console.log(data[i])
       }
+      // console.log(state.allUsers)
     }
   },
   actions: {
-    getUserById (context, data) {
+    getUserById (context, id) {
       axios
-        .get(process.env.VUE_APP_BASE_URL + 'user/' + data)
+        .get(process.env.VUE_APP_BASE_URL + 'user/' + id)
         .then(res => {
           context.commit('user', res.data.user)
         })
     },
-    getUserProfile (context, data) {
+    getUserProfile (context, id) {
       axios
-        .get(process.env.VUE_APP_BASE_URL + 'user/' + data)
+        .get(process.env.VUE_APP_BASE_URL + 'user/' + id)
         .then(res => {
           context.commit('userProfile', res.data.user)
         })

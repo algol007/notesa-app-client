@@ -36,7 +36,8 @@ export default {
   },
   data () {
     return {
-      storage: []
+      storage: [],
+      room: null
     }
   },
   beforeCreate () {
@@ -48,15 +49,28 @@ export default {
   created () {
     this.storage = JSON.parse(localStorage.getItem('items'))
     this.getUserById(this.storage.id)
+    this.getAllUsers()
   },
   methods: {
     ...mapActions('user', ['getUserById']),
+    ...mapActions('user', ['getAllUsers']),
+    ...mapActions('user', ['getUserProfile']),
+    ...mapActions('chat', ['getUserChat']),
     ...mapActions('chat', ['userChat']),
     selected (data) {
       this.userChat(data)
+      this.room = this.user.id + this.userC.id
+      this.getUserChat(this.room)
+      // this.getUserChat(this.userC.id)
+      console.log(this.room)
     }
   },
+  mounted () {
+    this.room = this.user.id + this.userC.id
+    // console.log(this.user.id)
+  },
   computed: {
+    ...mapState('user', ['user']),
     ...mapState('chat', ['userC'])
   }
 }
@@ -68,8 +82,12 @@ export default {
     display: flex;
     background-color: #CAE8D5;
   }
+  .main{
+    overflow-y: scroll;
+  }
   .navbar{
-    // position: fixed;
+    padding-right: 260px;
+    position: fixed;
     width: 100%;
   }
   .chats{

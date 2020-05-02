@@ -17,7 +17,7 @@
       <!-- Chat -->
       <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="(user, index) in users" :key="index"  @click="$emit('selected', user)">
         <div class="profile-img">
-          <img :src="user.image" :alt="user.image" class="h-12 rounded-full">
+          <img :src="user.image" :alt="user.image" width="48px" class="rounded-full h-12">
         </div>
         <div class="profile-info text-gray-900 pl-3">
           <div class="profile-name">
