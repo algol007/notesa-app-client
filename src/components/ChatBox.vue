@@ -1,13 +1,16 @@
 <template>
   <div class="chat-box">
-    <receiver v-for="receiver in receivers" :key="receiver.id + '-receiver'" :message="receiver.message" />
-    <sender v-for="send in sender" :key="send.id" :message="send.message" />
+    <div class="no-chats" v-if="chats[0] === 0">
+    </div>
+    <div class="chat-body" v-for="chat in chats" :key="chat.id + '-chat'" v-else>
+      <receiver v-if="chat.userId !== chatId" :message="chat.message" />
+      <sender :message="chat.message" v-else />
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-import { mapState } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import receiver from '@/components/Receiver.vue'
 import sender from '@/components/Sender.vue'
 
@@ -20,41 +23,35 @@ export default {
   data () {
     return {
       sender: null,
-      receivers: null
+      receivers: null,
+      room: null,
+      chatId: null
     }
   },
   methods: {
-    send () {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + `chat/user/${this.user.id}`)
-        .then(res => {
-          this.sender = res.data.chat.rows
-          // console.log(this.sender)
-        })
+    myChat () {
+      const items = JSON.parse(localStorage.getItem('items'))
+      this.chatId = items.id
+      // console.log(this.chatId)
     },
-    getChat () {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + `chat/user/${this.user.id}`)
-        .then(res => {
-          this.receivers = res.data.chat.rows
-          console.log(this.receivers)
-        })
-    }
+    ...mapActions('chat', ['getUserChat'])
   },
   computed: {
-    ...mapState('chat', ['userChat']),
-    ...mapState('user', ['user'])
+    ...mapState('chat', ['userC']),
+    ...mapState('chat', ['chats']),
+    ...mapState('user', ['user']),
+    ...mapGetters('chat', ['senderChat'])
   },
-  mounted () {
-    this.send()
-    this.getChat()
-    // const items = JSON.parse(localStorage.getItem('items'))
-    // console.log(items.id)
-    // this.getAllUserChats(items.id)
+  created () {
+    this.room = this.user.id + this.userC.id
+    this.myChat()
+    this.getUserChat(this.room)
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+  .chat-box{
+    padding: 60px 0 50px;
+  }
 </style>

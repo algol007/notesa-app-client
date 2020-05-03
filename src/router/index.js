@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Profile from '../views/Profile.vue'
 import Logout from '../views/Logout.vue'
+import Sockets from '../views/Socket.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const routes = [
     path: '/auth/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/sockets',
+    name: 'Sockets',
+    component: Sockets
   },
   {
     path: '/logout',
