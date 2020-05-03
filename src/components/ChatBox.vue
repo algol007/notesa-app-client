@@ -44,8 +44,8 @@ export default {
   },
   created () {
     this.room = this.user.id + this.userC.id
-    this.getUserChat(this.room)
     this.myChat()
+    this.getUserChat(this.room)
   }
 }
 </script>

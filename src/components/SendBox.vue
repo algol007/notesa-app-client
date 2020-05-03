@@ -32,7 +32,7 @@ export default {
           console.log(res)
           const input = document.querySelector('.message-send')
           input.value = ''
-          this.getUserChat()
+          this.getUserChat(this.room)
         })
     }
   },
