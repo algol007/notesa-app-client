@@ -11,12 +11,12 @@
             </div>
         </div>
       </router-link>
-      <div class="profile-option flex">
+      <!-- <div class="profile-option flex">
         <div class="input-group">
           <input class="input px-3 bg-transparent outline-none border-bottom" type="text">
         </div>
         <div class="search" @click="search"><i class="fas fa-search"></i></div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

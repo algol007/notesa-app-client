@@ -6,7 +6,7 @@
         <h3>Notesa App</h3>
       </div>
       <div class="icon2">
-        <router-link :to="`/profile/${user.id}`"><i class="fas fa-info-circle"></i></router-link>
+        <router-link :to="`/profile/1`"><i class="fas fa-info-circle"></i></router-link>
       </div>
       <div class="icon2 pr-3">
         <router-link to="/logout"><i class="fas fa-sign-out-alt"></i></router-link>
@@ -15,7 +15,7 @@
     <search-box class="search"></search-box>
     <div class="chat-list">
       <!-- Chat -->
-      <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="(user, index) in users" :key="index"  @click="$emit('selected', user)">
+      <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="user in allUsers" :key="user.id"  @click="$emit('selected', user)">
         <div class="profile-img">
           <img :src="user.image" :alt="user.image" width="48px" class="rounded-full h-12">
         </div>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { mapState, mapActions } from 'vuex'
 import searchBox from '@/components/SearchBox.vue'
 // import chat from '@/components/Chat.vue'
@@ -47,7 +46,6 @@ export default {
   },
   data () {
     return {
-      users: [],
       foo: [],
       data: null
     }
@@ -63,28 +61,13 @@ export default {
       // console.log(chat.key)
       chat.classList.toggle('active')
     },
-    getUsers () {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + 'user')
-        .then(res => {
-          // console.log(res.data.users.rows)
-          const data = res.data.users.rows
-          for (let i = 0; i < data.length; i++) {
-            // console.log(data[i].id)
-            // console.log(this.user.id)
-            const user = JSON.parse(localStorage.getItem('items'))
-            if (data[i].id !== user.id) {
-              this.users.push(data[i])
-            }
-          }
-        })
-    }
+    ...mapActions('user', ['getAllUsers'])
   },
   mounted () {
-    this.getUsers()
+    this.getAllUsers()
   },
   computed: {
-    ...mapState('user', ['user'])
+    ...mapState('user', ['allUsers'])
   }
 }
 </script>
@@ -143,5 +126,10 @@ export default {
   .profile-name{
     height: 25px;
     overflow: hidden;
+  }
+  @media screen and (max-width: 768px){
+    .sidebar{
+      height: 100%;
+    }
   }
 </style>

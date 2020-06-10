@@ -48,13 +48,10 @@ export default {
   },
   created () {
     this.storage = JSON.parse(localStorage.getItem('items'))
-    this.getUserById(this.storage.id)
     this.getAllUsers()
   },
   methods: {
-    ...mapActions('user', ['getUserById']),
-    ...mapActions('user', ['getAllUsers']),
-    ...mapActions('user', ['getUserProfile']),
+    ...mapActions('user', ['getUserById', 'getAllUsers']),
     ...mapActions('chat', ['getUserChat']),
     ...mapActions('chat', ['userChat']),
     selected (data) {
@@ -107,6 +104,9 @@ export default {
   @media screen and (max-width: 768px){
     .home{
       flex-wrap: wrap;
+    }
+    .no-chats{
+      padding-bottom: 200px;
     }
   }
 </style>

@@ -3,7 +3,7 @@
     <profile @maps="seeMaps" />
     <div class="maps">
       <GmapMap class="mx-auto rounded"
-        :center="{lat:10, lng:10}"
+        :center="{lat:-6.392132, lng:106.829743}"
         :zoom="7"
         map-type-id="terrain"
         style="width: 500px; height: 350px"

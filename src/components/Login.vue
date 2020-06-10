@@ -8,6 +8,12 @@
             <i class="fas fa-times"></i>
           </span>
         </div>
+        <div class="alert bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded relative mb-3" role="alert" v-if="success.length !=0">
+          <strong class="font-bold">{{ success[0] }}</strong>
+          <span class="close absolute top-0 bottom-0 right-0 px-4 py-2" @click="close">
+            <i class="fas fa-times"></i>
+          </span>
+        </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
             Email
@@ -37,7 +43,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
   name: 'Login',
@@ -45,6 +51,7 @@ export default {
     return {
       id: null,
       error: [],
+      success: [],
       user: {
         email: null,
         password: null
@@ -58,12 +65,6 @@ export default {
     }
   },
   methods: {
-    localData () {
-      const parsed = JSON.stringify({
-        id: this.id
-      })
-      localStorage.setItem('items', parsed)
-    },
     close () {
       const close = document.querySelector('.alert')
       close.classList.toggle('hide')
@@ -72,29 +73,21 @@ export default {
     },
     login (e) {
       e.preventDefault()
-      axios
-        .post(process.env.VUE_APP_BASE_URL + 'auth/signin', {
-          email: this.user.email,
-          password: this.user.password
-        })
+      firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then(res => {
-          this.error = []
-          // console.log(res.data.id)
-          if (res.data.id === 0) {
-            this.error.push('Email anda belum terdaftar!')
-          } else {
-            this.error = []
-            // console.log(res.data.status)
-            if (res.data.status === 0) {
-              this.error.push('Wrong password!')
-            } else {
-              // console.log(res.data.user)
-              this.id = res.data.user
-              this.localData()
-              this.$router.push('/')
-              // localStorage.setItem({ id: res.data.user })
-            }
-          }
+          console.log(res)
+          localStorage.setItem('items', JSON.stringify({ isLogin: true }))
+          firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+            .update({
+              status: true
+            })
+          this.success.push('Login Successfully!')
+          setTimeout(() => {
+            this.$router.push('/')
+          }, 3000)
+        })
+        .catch(err => {
+          this.error.push(err.message)
         })
     }
   }
