@@ -1,6 +1,6 @@
 <template>
   <div class="chat-lists">
-    <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="(user, index) in users" :key="index"  @click="$emit('selected', user)">
+    <div class="chat w-full flex px-2 py-3 hover:bg-gray-200" v-for="user in allUsers" :key="user.id"  @click="$emit('selected', user)">
       <div class="profile-img">
         <img :src="user.image" :alt="user.image" class="h-12 rounded-full">
       </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Chat',
@@ -27,26 +27,14 @@ export default {
     }
   },
   mounted () {
-    this.getUsers()
+    this.getAllUsers()
   },
   methods: {
-    getUsers () {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + 'user')
-        .then(res => {
-          // console.log(res.data.users.rows)
-          const data = res.data.users.rows
-          for (let i = 0; i < data.length; i++) {
-            // console.log(data[i].id)
-            // console.log(this.user.id)
-            const user = JSON.parse(localStorage.getItem('items'))
-            if (data[i].id !== user.id) {
-              this.users.push(data[i])
-            }
-          }
-        })
-    }
-  }
+    ...mapActions('user', ['getAllUsers'])
+  },
+  computed: {
+    ...mapState('user', ['allUsers'])
+  },
 }
 </script>
 

@@ -8,6 +8,12 @@
             <i class="fas fa-times"></i>
           </span>
         </div>
+        <div class="alert bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded relative mb-3" role="alert" v-if="success.length !=0">
+          <strong class="font-bold">{{ success[0] }}</strong>
+          <span class="close absolute top-0 bottom-0 right-0 px-4 py-2" @click="close">
+            <i class="fas fa-times"></i>
+          </span>
+        </div>
         <div class="mb-4">
           <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
             Nama Lengkap
@@ -31,7 +37,7 @@
           <label class="block text-gray-700 text-sm font-bold mb-2" for="password2">
             Ulangi Kata Sandi
           </label>
-          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password2" type="password2" placeholder="Ulangi Kata Sandi" v-model="user.password2" required>
+          <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="password2" type="password" placeholder="Ulangi Kata Sandi" v-model="user.password2" required>
           <p class="text-red-500 text-xs italic pt-1 mb-3" v-if="user.password2.length > 0 && user.password2.length < 6">Password min 6 character.</p>
         </div>
         <div class="flex items-center justify-between">
@@ -51,8 +57,7 @@
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
-import axios from 'axios'
+import firebase from 'firebase'
 
 export default {
   name: 'Login',
@@ -62,9 +67,11 @@ export default {
         name: null,
         email: null,
         password: '',
-        password2: ''
+        password2: '',
+        image: 'https://firebasestorage.googleapis.com/v0/b/notesa-app.appspot.com/o/user.png?alt=media&token=043c2289-6002-40a2-a196-cbe1f0ca171b'
       },
-      error: []
+      error: [],
+      success: []
     }
   },
   methods: {
@@ -75,19 +82,22 @@ export default {
     },
     register (e) {
       e.preventDefault()
-      axios
-        .post(process.env.VUE_APP_BASE_URL + 'auth/signup', {
-          name: this.user.name,
-          email: this.user.email,
-          password: this.user.password
-        })
+      firebase.auth().createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then(res => {
-          if (res.data.status === 0) {
-            this.error.push('Email has been registered!')
-          } else {
-            console.log(res)
+          this.success.push('Register Successfully')
+          firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
+            .set({
+              name: this.user.name,
+              email: this.user.email,
+              image: this.user.image,
+              status: true
+            })
+          setTimeout(() => {
             this.$router.push('/auth/login')
-          }
+          }, 3000)
+        })
+        .catch(err => {
+          this.error.push(err.message)
         })
     }
   }

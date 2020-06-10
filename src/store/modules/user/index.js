@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import db from '../../../firebaseInit'
+import firebase from 'firebase'
 
 Vue.use(Vuex)
 
@@ -16,20 +18,18 @@ export default ({
       state.user = data
       // console.log(data)
     },
-    userProfile (state, data) {
-      state.userProfile = data
-      // console.log(state.userProfile)
-    },
     allUsers (state, data) {
-      const items = JSON.parse(localStorage.getItem('items'))
-      // console.log(items.id)
+      state.allUsers = data
+      const profile = firebase.auth().currentUser
       for (let i = 0; i < data.length; i++) {
-        if (data[i].id !== items.id) {
-          state.allUsers.push(data[i])
+        if (state.allUsers[i].email === profile.email) {
+          state.user = state.allUsers[i]
         }
-        // console.log(data[i])
       }
-      // console.log(state.allUsers)
+    },
+    logout (state) {
+      state.allUsers = []
+      state.user = []
     }
   },
   actions: {
@@ -40,19 +40,14 @@ export default ({
           context.commit('user', res.data.user)
         })
     },
-    getUserProfile (context, id) {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + 'user/' + id)
-        .then(res => {
-          context.commit('userProfile', res.data.user)
-        })
-    },
     getAllUsers (context) {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + 'user')
-        .then(res => {
-          context.commit('allUsers', res.data.users.rows)
+      db.collection('users').onSnapshot((querySnapshot) => {
+        const allProfile = []
+        querySnapshot.forEach(doc => {
+          allProfile.push(doc.data())
         })
+        context.commit('allUsers', allProfile)
+      })
     }
   }
 })
