@@ -8,41 +8,31 @@
 </template>
 
 <script>
-import axios from 'axios'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
+import db from '../firebaseInit'
 
 export default {
   name: 'SendBox',
   data () {
     return {
-      message: null,
-      room: null
+      message: '',
+      room: ''
     }
   },
   methods: {
-    ...mapActions('chat', ['getUserChat']),
     sendChat () {
-      axios
-        .post(process.env.VUE_APP_BASE_URL + 'chat', {
-          userId: this.user.id,
-          message: this.message,
-          room: this.room
-        })
-        .then(res => {
-          console.log(res)
-          const input = document.querySelector('.message-send')
-          input.value = ''
-          this.getUserChat(this.room)
-        })
+      db.collection('chats').add({
+        message: this.message,
+        sender: this.user.email,
+        receiver: this.receiver.email,
+        createdAt: new Date()
+      })
+      this.message = ''
     }
-  },
-  mounted () {
-    this.room = this.user.id + this.userC.id
-    // console.log(this.room)
   },
   computed: {
     ...mapState('user', ['user']),
-    ...mapState('chat', ['userC'])
+    ...mapState('chat', ['receiver'])
   }
 }
 </script>

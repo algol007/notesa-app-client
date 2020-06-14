@@ -19,17 +19,17 @@
           </span>
         </div>
         <div class="profile-img mb-5">
-          <img :src="profile.image" :alt="profile.image" class="mx-auto rounded-full">
+          <img :src="receiver.image" :alt="receiver.image" class="mx-auto rounded-full">
         </div>
         <form @submit="saveChanges" class="profile-info">
           <div class="profile-name mb-3 text-xl">
-            <input type="text" v-model="profile.name" class="text-center outline-none" id="name" required
+            <input type="text" v-model="receiver.name" class="text-center outline-none" id="name" required
             v-if="this.profileId == this.userId">
-            <input type="text" v-model="profile.name" class="text-center outline-none transparent" id="name" disabled
+            <input type="text" v-model="receiver.name" class="text-center outline-none transparent" id="name" disabled
             v-else>
           </div>
           <div class="profile-email pb-5 text-md text-gray-600">
-            <input type="text" :value="profile.email" class="text-center outline-none transparent" id="email" disabled>
+            <input type="text" :value="receiver.email" class="text-center outline-none transparent" id="email" disabled>
           </div>
           <div class="button-save flex flex-row-reverse mt-5" v-if="this.profileId == this.userId">
             <button class="signin hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Save</button>
@@ -58,15 +58,11 @@ export default {
     }
   },
   created () {
-    this.getUserProfile(this.$route.params.userId)
     this.profileId = this.$route.params.userId
     const items = JSON.parse(localStorage.getItem('items'))
     this.userId = items.id
     // console.log(this.profileId)
     // console.log(this.userId)
-  },
-  mounted () {
-    this.getProfile()
   },
   methods: {
     close () {
@@ -79,14 +75,6 @@ export default {
       const file = this.$refs.file.files[0]
       this.image = file
       console.log(this.$refs.file.value)
-    },
-    getProfile () {
-      axios
-        .get(process.env.VUE_APP_BASE_URL + 'user/' + this.$route.params.userId)
-        .then(res => {
-          // console.log(res.data.user)
-          this.profile = res.data.user
-        })
     },
     saveChanges (e) {
       e.preventDefault()
@@ -112,7 +100,8 @@ export default {
     ...mapActions('user', ['getUserProfile'])
   },
   computed: {
-    ...mapState('user', ['userProfile'])
+    ...mapState('user', ['userProfile']),
+    ...mapState('chat', ['receiver'])
   }
 }
 </script>

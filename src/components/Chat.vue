@@ -21,11 +21,6 @@ import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Chat',
-  data () {
-    return {
-      users: []
-    }
-  },
   mounted () {
     this.getAllUsers()
   },
