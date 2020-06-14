@@ -1,7 +1,7 @@
 <template>
   <div class="home flex">
     <sidebar class="w-full md:w-1/2 lg:w-1/3 xl:w-1/4" @selected="selected" />
-    <div class="main w-full" v-if="this.userC.length !== 0">
+    <div class="main w-full" v-if="this.receiver.length !== 0">
       <navbar />
       <div class="chats">
         <chat-box />
@@ -46,29 +46,17 @@ export default {
       this.$router.push('/auth/login')
     }
   },
-  created () {
-    this.storage = JSON.parse(localStorage.getItem('items'))
-    this.getAllUsers()
-  },
   methods: {
     ...mapActions('user', ['getUserById', 'getAllUsers']),
-    ...mapActions('chat', ['getUserChat']),
-    ...mapActions('chat', ['userChat']),
+    ...mapActions('chat', ['getReceiver']),
     selected (data) {
-      this.userChat(data)
-      this.room = this.user.id + this.userC.id
-      this.getUserChat(this.room)
-      // this.getUserChat(this.userC.id)
-      console.log(this.room)
+      // console.log(data)
+      this.getReceiver(data)
     }
-  },
-  mounted () {
-    this.room = this.user.id + this.userC.id
-    // console.log(this.user.id)
   },
   computed: {
     ...mapState('user', ['user']),
-    ...mapState('chat', ['userC'])
+    ...mapState('chat', ['receiver'])
   }
 }
 </script>

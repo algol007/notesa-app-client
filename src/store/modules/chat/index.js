@@ -1,51 +1,43 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import db from '../../../firebaseInit'
 
 Vue.use(Vuex)
 
 export default ({
   namespaced: true,
   state: {
-    userC: [],
+    sender: [],
+    receiver: [],
     chats: []
   },
   mutations: {
-    user (state, data) {
-      state.userC = data
-      // console.log(state.userC)
+    receiver (state, data) {
+      state.receiver = data
     },
-    userChat (state, data) {
+    chats (state, data) {
       state.chats = data
+      console.log(state.chats)
     },
     clear (state) {
-      state.userC = []
+      state.receiver = []
       // console.log(state.chats)
     }
   },
-  getters: {
-    senderChat (state) {
-      const senderChat = state.chats.filter(chat => {
-        return chat.userId === 1
-      })
-      // console.log(senderChat)
-      return senderChat
-    }
-  },
   actions: {
-    userChat (context, data) {
-      context.commit('user', data)
+    getReceiver (context, data) {
+      context.commit('receiver', data)
     },
-    getUserChat (context, id) {
-      // console.log(id)
-      axios
-        .get(process.env.VUE_APP_BASE_URL + `chat/room/${id}`)
-        .then(res => {
-          if (res.data.status === 0) {
-            context.commit('userChat', res.data.status)
-          } else {
-            context.commit('userChat', res.data.chat.rows)
-          }
+    showChat (context, { sender, receiver }) {
+      db.collection('chats').where('sender', '==', sender.email)
+      db.collection('chats').where('receiver', '==', receiver.email)
+      db.collection('chats').orderBy('createdAt')
+        .onSnapshot((querySnapshot) => {
+          const allMessages = []
+          querySnapshot.forEach((doc) => {
+            allMessages.push(doc.data())
+          })
+          context.commit('chats', allMessages)
         })
     },
     clearRoom (context) {

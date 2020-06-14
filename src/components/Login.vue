@@ -76,6 +76,7 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then(res => {
           console.log(res)
+          this.error = []
           localStorage.setItem('items', JSON.stringify({ isLogin: true }))
           firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid)
             .update({
