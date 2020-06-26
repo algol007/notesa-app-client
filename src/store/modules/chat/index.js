@@ -21,7 +21,6 @@ export default ({
     },
     clear (state) {
       state.receiver = []
-      // console.log(state.chats)
     }
   },
   actions: {
@@ -29,8 +28,8 @@ export default ({
       context.commit('receiver', data)
     },
     showChat (context, { sender, receiver }) {
-      db.collection('chats').where('sender', '==', sender.email)
-      db.collection('chats').where('receiver', '==', receiver.email)
+      // db.collection('chats').where('sender', '==', sender.email)
+      // db.collection('chats').where('receiver', '==', receiver.email)
       db.collection('chats').orderBy('createdAt')
         .onSnapshot((querySnapshot) => {
           const allMessages = []
