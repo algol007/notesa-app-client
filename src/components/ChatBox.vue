@@ -3,8 +3,8 @@
     <div class="no-chats" v-if="chats[0] === 0">
     </div>
     <div class="chat-body" v-for="chat in chats" :key="chat.id" v-else>
-      <receiver :message="chat.message" v-if="chat.sender !== user.email" />
-      <sender :message="chat.message"/>
+      <sender :message="chat.message" v-if="chat.sender === user.email && chat.receiver === receiver.email" />
+      <receiver :message="chat.message" v-else-if="chat.receiver === receiver.email" />
     </div>
   </div>
 </template>
