@@ -34,9 +34,9 @@
 ## Screenshots
 
 <p align='center'>
-  <image width="300" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa1.png' />
-  <image width="300" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa2.png' />
-  <image width="300" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa3.png' />
+  <image width="200" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa1.png' />
+  <image width="200" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa2.png' />
+  <image width="200" src='https://github.com/algol007/notesa-app-client/blob/master/src/assets/screenshoot/notesa3.png' />
 </p>
 
 ## Usage for development
