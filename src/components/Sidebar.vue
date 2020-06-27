@@ -6,7 +6,7 @@
         <h3>Notesa App</h3>
       </div>
       <div class="icon2">
-        <router-link :to="`/profile/1`"><i class="fas fa-info-circle"></i></router-link>
+        <button @click="userProfile(user)"><i class="fas fa-info-circle"></i></button>
       </div>
       <div class="icon2 pr-3">
         <router-link to="/logout"><i class="fas fa-sign-out-alt"></i></router-link>
@@ -51,10 +51,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions('chat', ['userChat']),
+    ...mapActions('chat', ['userChat', 'getReceiver']),
     selected (data) {
       this.data = data
       // console.log(data)
+    },
+    userProfile (data) {
+      this.$router.push('/profile')
     },
     activeChat (id) {
       const chat = document.querySelector('.chat')
@@ -67,7 +70,7 @@ export default {
     this.getAllUsers()
   },
   computed: {
-    ...mapState('user', ['allUsers'])
+    ...mapState('user', ['allUsers', 'user'])
   }
 }
 </script>

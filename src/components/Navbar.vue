@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="title px-5 text-white flex justify-between">
-      <router-link :to="`/profile`" >
+      <router-link to="/profile" >
         <div class="profile-info flex">
             <div class="profile-img">
               <img :src="receiver.image" :alt="receiver.image" width="40px" class="h-10 rounded-full">

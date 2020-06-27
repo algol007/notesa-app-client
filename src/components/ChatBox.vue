@@ -4,7 +4,7 @@
     </div>
     <div class="chat-body" v-for="chat in chats" :key="chat.id" v-else>
       <sender :message="chat.message" v-if="chat.sender === user.email && chat.receiver === receiver.email" />
-      <receiver :message="chat.message" v-else-if="chat.receiver === receiver.email" />
+      <receiver :message="chat.message" v-else />
     </div>
   </div>
 </template>
