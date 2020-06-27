@@ -1,10 +1,10 @@
 <template>
-  <div class="send-box px-5">
+  <form class="send-box px-5" @submit="sendChat">
     <input class="message-send appearance-none rounded w-full py-2 px-5 text-gray-700 leading-tight focus:outline-none rounded-full" id="username" type="text" placeholder="Type a message" v-model="message">
-    <div class="send-button ml-2 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline" @click="sendChat">
+    <div class="send-button ml-2 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-full focus:outline-none focus:shadow-outline">
       <i class="fas fa-paper-plane"></i>
     </div>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -20,7 +20,8 @@ export default {
     }
   },
   methods: {
-    sendChat () {
+    sendChat (e) {
+      e.preventDefault()
       db.collection('chats').add({
         message: this.message,
         sender: this.user.email,
