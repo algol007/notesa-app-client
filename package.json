@@ -10,7 +10,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
-    "engine.io": "^3.4.1",
+    "engine.io": "^4.1.2",
     "firebase": "^7.14.2",
     "pusher-js": "^6.0.2",
     "register-service-worker": "^1.7.1",
